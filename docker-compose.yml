@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  db:
+      image: postgres:12.2
+      container_name:  BookReview-Postgres
+      restart: always
+      environment:
+        POSTGRES_DB: postgres
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: secret
+        PGDATA: /var/lib/postgresql/data
+      volumes:
+        - db-data:/var/lib/postgresql/data
+      ports:
+        - 54320:5432
+
+  book_review_backend:
+    build: .
+    container_name:  BookReview
+    command: bash -c "uvicorn app.main:app --host 0.0.0.0 --port 7003 --reload"
+    volumes:
+      - .:/srv/book_review_backend
+    ports:
+      - 7003:7003
+    depends_on:
+      - db
+    env_file: .env
+
+#  wiki_db_mutator:
+#    build: .
+#    container_name:  RegFollow-Db-Mutator
+#    command: bash -c "python run_db.py auto"
+#    volumes:
+#      - .:/srv/reg_follow_backend
+#    env_file: .env
+#    depends_on:
+#      - regfollow_backend
+
+volumes:
+  db-data:

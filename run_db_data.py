@@ -9,6 +9,7 @@ class DbData:
     def __init__(self):
         self.root_directory: str = "db_merge_scripts"
         self.scripts = [
+            "loader.sql"
         ]
 
     def sync(self, db: Session):
